@@ -15,9 +15,12 @@ long duration;
 int distance;
 //Declare line sensor pins
 int linesense = 10;
+int backsense = 9;
 //Reverse op
 int reverseop = 0; //stopped, forward, backwards, left, right
 int previousops[] = {0}; //Add some smart
+//attempt AI (flag)?
+bool STONKS = true;
 //I am not declaring stuff anymore
 
 int sonicsense() {
@@ -50,6 +53,7 @@ void change_speed(int speedgobrrrr) {
     analogWrite(LSp, sped);
     analogWrite(RSp, sped);
 }
+
 void stopmot() {
     //stop motors and wait 200 milliseconds
     reverseop = 0;
@@ -129,6 +133,15 @@ void toggledir() {
     }
 }
 
+void smorts() {
+    //smarst code go brrr
+    //First the bot needs to identify what method the opponent is using.
+
+    while (true) {
+        
+    }
+}
+
 void setup() {
     //Define pin modes, I chose not to use a for loop incase I need to move/modify modules on pins 
     pinMode(LSp, OUTPUT);
@@ -145,22 +158,43 @@ void setup() {
 }
 //darkgreen to white
 void loop() {
-    //Loops lol
-    Forward(); //execute the Forward function
-    delay(1000); //delay for 1 second
-    Backward(); //execute Backward function
-    delay(1000);  //delay for a second
-    //Add some logic
-    if(sonicsense() < 5) {
-        //Sensed somsething less than 5 cm away lmao
-
-
+    if (STONKS) {
+        smorts();
     }
     else {
-        if (digitalRead(linesense) == 1) {
-            toggledir(); //add some tactical manourvers
+        //Don't do counter offensive strat, just use this because it works in most cases
+        change_speed(120);
+        Forward();
+        while(sonicsense() > 7 && digitalRead(linesense) == 0){} //Execute as a 'wait for' funtion 
+        if (digitalRead(linesense) == 1) { //hit a line
+            stopmot();
+            Backward();
+            delay(1000);
+            stopmot();
+            //Hopefully close enough to mid
         }
-        //Do something that gets you closed to other bots
+        else {
+            //The bots are close
+            change_speed(50); //Slow speed, encouage shoving. Also recuces stress on motors
+            while (digitalRead(backsense) == 0) {} //Await the edge of the ring
+            change_speed(150);
+            Left();
+            for (int pp = 0; pp < 480; pp++) {
+                delay(10); //wait a millisecond
+                if (digitalRead(linesense) == 1 || digitalRead(backsense) == 1) {
+                    //Oh no near line
+                    change_speed(120);
+                    Backward();
+                    delay(100);
+                    stopmot();
+                    break;
+                }
+            }
+            Forward();
+            change_speed(50);
+            stopmot();
+            //May have not been pushed out
+        }
     }
 }
 
