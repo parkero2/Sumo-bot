@@ -19,8 +19,10 @@ int backsense = 9;
 //Reverse op
 int reverseop = 0; //stopped, forward, backwards, left, right
 int previousops[] = {0}; //Add some smart
-//attempt AI (flag)?
+//attempt smartness (flag)
 bool STONKS = true;
+//Declare a loop counter
+int loopcount = 0;
 //I am not declaring stuff anymore
 
 int sonicsense() {
@@ -108,6 +110,13 @@ void Right() {
     digitalWrite(Rb, HIGH);
 }
 
+void turn(int ls, int rs) {
+    stopmot();
+    LSp = ls;
+    RSp = rs;
+    Forward();
+}
+
 void toggledir() {
     if (reverseop == 0) {
         Serial.println("That's some weird shit. Not meant to be stopped.");
@@ -133,15 +142,6 @@ void toggledir() {
     }
 }
 
-void smorts() {
-    //smarst code go brrr
-    //First the bot needs to identify what method the opponent is using.
-
-    while (true) {
-        
-    }
-}
-
 void setup() {
     //Define pin modes, I chose not to use a for loop incase I need to move/modify modules on pins 
     pinMode(LSp, OUTPUT);
@@ -156,10 +156,38 @@ void setup() {
     //Declare some functions
     Serial.begin(9600); //Begin serial communication
 }
-//darkgreen to white
+
 void loop() {
     if (STONKS) {
-        smorts();
+        while (true) {
+            //Creates a loop to save the arduino from working out if the first statment is true
+            //This is a loop designed for advanced battle tactics that may not be legal in all games
+            change_speed(100);
+            turn(120, 60);
+            while (digitalRead(linesense) == 0 || backsense == 0 && loopcount < 80) {
+                loopcount =+ 1;
+            }
+            stopmot();
+            change_speed(120);
+            Right();
+            delay(200);
+            Forward();
+            while (sonicsense() > 10 && linesense == 0) { }
+            if (linesense == 1) {
+                Backward();
+                delay(500);
+                stopmot();
+            }
+            while (sonicsense() < 11) {
+                if (linesense == 1) {
+                    Backward();
+                    delay(400);
+                    Left(); //Victory dance
+                    delay(999999);
+                }
+            }
+            //victory failed
+        }
     }
     else {
         //Don't do counter offensive strat, just use this because it works in most cases
@@ -180,7 +208,7 @@ void loop() {
             change_speed(150);
             Left();
             for (int pp = 0; pp < 480; pp++) {
-                delay(10); //wait a millisecond
+                delay(10); //wait 10 milliseconds
                 if (digitalRead(linesense) == 1 || digitalRead(backsense) == 1) {
                     //Oh no near line
                     change_speed(120);
