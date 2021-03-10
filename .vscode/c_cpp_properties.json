@@ -7,10 +7,16 @@
                 "C:\\Users\\oliver\\Documents\\Arduino\\libraries\\**",
                 "T:\\Arduino\\libraries\\**",
                 "T:\\Arduino\\hardware\\tools\\**",
-                "T:\\Arduino\\hardware\\arduino\\avr\\**"
+                "T:\\Arduino\\hardware\\arduino\\avr\\**",
+                "C:\\Program Files (x86)\\Arduino\\hardware\\arduino\\avr\\**",
+                "C:\\Program Files (x86)\\Arduino\\hardware\\tools\\**",
+                "C:\\Program Files (x86)\\Arduino\\libraries\\**",
+                "C:\\Users\\olive\\Documents\\Arduino\\libraries\\**",
+                "C:\\Program Files (x86)\\Arduino\\tools\\**"
             ],
             "forcedInclude": [
-                "T:\\Arduino\\hardware\\arduino\\avr\\cores\\arduino\\Arduino.h"
+                "T:\\Arduino\\hardware\\arduino\\avr\\cores\\arduino\\Arduino.h",
+                "C:\\Program Files (x86)\\Arduino\\hardware\\arduino\\avr\\cores\\arduino\\Arduino.h"
             ],
             "defines": [
                 "USBCON"
