@@ -94,8 +94,10 @@ int * IRSense() {
     //IRSense will get a reading from all four of the infared sensors located on the bottom of the bot, then returns the data in the format of an array.
 }
 
-boolean checkIRVals(boolean compensate) {
-    IRSense();
+boolean checkIRVals(boolean compensate, boolean UseOld) {
+    if (!UseOld) {
+        IRSense();
+    }
     if (!compensate){
         for (int i = 0; i < 4; i++) {
             if (returnedVals[i] == 1) {
@@ -107,7 +109,7 @@ boolean checkIRVals(boolean compensate) {
         return false;
     }
     else {
-        if (checkIRVals(false)) {
+        if (checkIRVals(false, true)) {
             digitalWrite(ErrPin, HIGH);
         }
         else {
@@ -184,7 +186,7 @@ void loop() {
     }
     else {
         while (true) {
-            checkIRVals(true); //This function with a true argument means that it will detect lines and then try to compenstae for any errors
+            checkIRVals(true, false); //This function with a true argument means that it will detect lines and then try to compenstae for any errors
         }
     }
 }
