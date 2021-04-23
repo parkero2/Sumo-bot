@@ -187,6 +187,22 @@ void loop() {
     else {
         while (true) {
             checkIRVals(true, false); //This function with a true argument means that it will detect lines and then try to compenstae for any errors
+            if (UltraSonic() > 80) {
+                ChangeSpeed(100);
+                Left();
+                while (UltraSonic() > 80) {
+                    checkIRVals(true, false);
+                    delay(100);
+                }
+                ChangeSpeed(50);
+                Left();
+                delay(500);
+                HaltMotors();
+                
+            }
+            else {
+
+            }
         }
     }
 }
