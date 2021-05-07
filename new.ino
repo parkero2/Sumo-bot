@@ -120,29 +120,37 @@ boolean checkIRVals(boolean compensate, boolean UseOld) {
             //Back right HIGH
             swerve(-50);
             Forward();
-            delay(500);
-            HaltMotors();
+            while (checkIRVals(false, true) && returnedVals[0] == 1) {
+                delay(200);
+            }
+            swerve(0);
         }
         else if  (returnedVals[1] == 1) {
             //Front right HIGH
             swerve(-50);
             Backward();
-            delay(500);
-            HaltMotors();
+            while (checkIRVals(false, true) && returnedVals[1] == 1) {
+                delay(200);
+            }
+            swerve(0);
         }
         else if (returnedVals[2] == 1) {
             //Front left HIGH
             swerve(50);
             Backward();
-            delay(500);
-            HaltMotors();
+            while (checkIRVals(false, true) && returnedVals[2] == 1) {
+                delay(200);
+            }
+            swerve(0);
         }
         else {
             //Back left HIGH
             swerve(50);
             Forward();
-            delay(500);
-            HaltMotors();
+            while (checkIRVals(false, true) && returnedVals[3] == 1) {
+                delay(200);
+            }
+            swerve(0);
         }
     }
 }
@@ -181,13 +189,43 @@ void loop() {
     if (digitalRead(selfPilot)) {
         //The switch is closed
         while (true) {
-            //A while loop prevents the arduino from constantly checking the switch state. This means the reset button will need to be pressed to take effect
+            //A while loop prevents the arduino from constantly checking the switch state. This means the reset button will need to be pressed for a state change to take effect
         }
     }
     else {
         while (true) {
             checkIRVals(true, false); //This function with a true argument means that it will detect lines and then try to compenstae for any errors
-            if (UltraSonic() > 80) {
+            if (UltraSonic() < 80) {
+                //The bot has sensed something less than 80mm away
+                Left();
+                delayMicroseconds((mm / 0.17) / 2); //An approximation to try get the bot straight to the opponent by returning the value back to microseconds then halfing.
+                ChangeSpeed(120);
+                Forward();
+                while (UltraSonic() > 20 && UltraSonic() < 80) {
+                    checkIRVals(true, false);
+                    delay(200);
+                    ChangeSpeed(120);
+                    Forward();
+                }
+                //in range within 2 cm
+                Forward();
+                ChangeSpeed(130);
+                int StartTime = millis();
+                while (StartTime + 10000 > millis()) {
+                    delay(50);
+                    checkIRVals(true, false);
+                }
+                ChangeSpeed(100);
+                Backward();
+                StartTime = millis();
+                while (StartTime + 30000 > millis()) {
+                    checkIRVals(true, false);
+                    delay(50);
+                }
+                HaltMotors();
+                //The timer started 10 secods ago
+
+                /** OLD CODE
                 ChangeSpeed(100);
                 Left();
                 while (UltraSonic() > 80) {
@@ -198,10 +236,16 @@ void loop() {
                 Left();
                 delay(500);
                 HaltMotors();
-                
+                */
+            }
+            else if (!IRSense()) {
+                //There are no lines being detected
+                ChangeSpeed(50);
+                Right();
             }
             else {
-
+                //There is a line sensed. Make an attempt to fix
+                checkIRVals(true, true);
             }
         }
     }
