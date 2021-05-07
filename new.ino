@@ -9,8 +9,8 @@ int Rf = 2;
 int Rb = 4;
 //Sensor declarations
 //Ultrasonic
-int echoPin = A0;
-int trigPin = A1;
+#define echoPin A0
+#define trigPin A1
 //IR sensors
 int BR = 12;
 int FR = 11;
